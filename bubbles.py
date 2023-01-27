@@ -37,3 +37,6 @@ while continuer:
     for bubble in bubbles :
         pygame.draw.circle(screen, bubble["colour"], (bubble["x"], bubble["y"]), bubble["radius"])
     pygame.display.flip()
+
+
+# dgdsjl
