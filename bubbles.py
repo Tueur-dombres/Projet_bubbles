@@ -36,5 +36,3 @@ while continuer:
     for bubble in bubbles :
         pygame.draw.circle(screen, bubble["colour"][1], (bubble["x"], bubble["y"]), bubble["radius"])
     pygame.display.flip()
-
-    #sdfse
