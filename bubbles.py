@@ -20,12 +20,23 @@ while continuer:
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 continuer = False
+
     screen.fill(WHITE)
     spawn_bubbles += 1
-    suppr = []
+
+    colours_count = {i:[] for i in col.keys()}
+
     for i in range(len(bubbles)):
         bubble = bubbles[i]
         bubble["radius"] += .05
+        colours_count[bubble["colour"][0]] += [i]
+
+    suppr = []
+    for i,e in colours_count.items():
+        if len(e) >= 3:
+            suppr += e
+
+    bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
     bubbles = [bubble for bubble in bubbles if bubble["radius"] <= 100]
 
 
