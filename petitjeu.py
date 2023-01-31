@@ -26,7 +26,6 @@ while run:
             run = False
         elif event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
-                compteur += 1
                 if zone.collidepoint(event.pos):
                     print("Touché")
                     compteur += 1

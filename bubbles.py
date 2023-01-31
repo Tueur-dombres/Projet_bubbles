@@ -1,6 +1,7 @@
 import pygame as pg
 from pygame.locals import *
-from random import *
+from random import choice, randint
+from math import sqrt
 
 size_screen = w, h = (1280,720)
 screen = pg.display.set_mode(size_screen)
@@ -19,6 +20,14 @@ while continuer:
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 continuer = False
+        elif event.type == MOUSEBUTTONDOWN:
+            x, y = event.pos
+            if event.button == 1:
+                for bubble in bubbles:
+                    if sqrt((bubble["x"]-x)**2+(bubble["y"]-y)**2) < bubble["radius"]:
+                        bubble["colour"] = choice(couleurs)
+                        
+
 
     screen.fill(col["WHITE"])
     spawn_bubbles += 1

@@ -14,7 +14,7 @@ class Carte:
 class Deck:
     def __init__(self):
         couleur = ["\u2666", "\u2665", "\u2663", "\u2660"]
-        self.deck = [Carte(v, c) for v in range(1,14) for c in couleur]dddddFFFFF
+        self.deck = [Carte(v, c) for v in range(1,14) for c in couleur]
         self.melanger()
 
     def melanger(self):
