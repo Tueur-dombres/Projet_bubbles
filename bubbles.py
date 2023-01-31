@@ -17,6 +17,19 @@ bubbles = []
 spawn_bubbles = 0
 score = 0
 
+class Circle:
+    def __init__(self, x, y, radius, colour):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.colour = colour
+    
+    def collidepoint(self, x, y):
+        if sqrt((bubble.x-x)**2+(bubble.y-y)**2) < bubble.radius:
+            return True
+        else:
+            return False
+
 continuer = True    
 while continuer:
     horloge.tick(240)
@@ -30,8 +43,8 @@ while continuer:
             x, y = event.pos
             if event.button == 1:
                 for bubble in bubbles:
-                    if sqrt((bubble["x"]-x)**2+(bubble["y"]-y)**2) < bubble["radius"]:
-                        bubble["colour"] = choice(couleurs)
+                    if bubble.collidepoint(x,y):
+                        bubble.colour = choice(couleurs)
                         
 
 
@@ -42,8 +55,8 @@ while continuer:
 
     for i in range(len(bubbles)):
         bubble = bubbles[i]
-        bubble["radius"] += .05
-        colours_count[bubble["colour"]] += [i]
+        bubble.radius += .05
+        colours_count[bubble.colour] += [i]
 
     suppr = []
     for i,e in colours_count.items():
@@ -53,16 +66,16 @@ while continuer:
             print(score)
 
     bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
-    bubbles = [bubble for bubble in bubbles if bubble["radius"] <= 100]
+    bubbles = [bubble for bubble in bubbles if bubble.radius <= 100]
 
 
     text_score = font.render(str(score), 1, col["BLACK"])
     screen.blit(text_score, (20, 20))
 
     if spawn_bubbles >= 240:
-        bubbles += [{"x" : randint(100, w-100), "y" : randint(100, h-100), "radius" : 10, "colour" : choice(couleurs)}]
+        bubbles += [Circle(randint(100, w-100), randint(100, h-100), 10, choice(couleurs))]
         spawn_bubbles = 0
     
     for bubble in bubbles :
-        pg.draw.circle(screen, bubble["colour"], (bubble["x"], bubble["y"]), bubble["radius"])
+        pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
     pg.display.flip()
