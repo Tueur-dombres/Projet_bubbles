@@ -3,13 +3,19 @@ from pygame.locals import *
 from random import choice, randint
 from math import sqrt
 
+
+pg.init()
+
 size_screen = w, h = (1280,720)
 screen = pg.display.set_mode(size_screen)
 horloge = pg.time.Clock()
 col = {"BLACK":(0,0,0), "BLUE":(0,0,255), "RED":(255,0,0), "GREEN":(0,255,0), "WHITE":(255,255,255)}
 couleurs = [col["BLACK"], col["BLUE"], col["RED"], col["GREEN"]]
+font = pg.font.SysFont("arial", 36)
+
 bubbles = []
 spawn_bubbles = 0
+score = 0
 
 continuer = True    
 while continuer:
@@ -43,10 +49,15 @@ while continuer:
     for i,e in colours_count.items():
         if len(e) >= 3:
             suppr += e
+            score += 1
+            print(score)
 
     bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
     bubbles = [bubble for bubble in bubbles if bubble["radius"] <= 100]
 
+
+    text_score = font.render(str(score), 1, col["BLACK"])
+    screen.blit(text_score, (20, 20))
 
     if spawn_bubbles >= 240:
         bubbles += [{"x" : randint(100, w-100), "y" : randint(100, h-100), "radius" : 10, "colour" : choice(couleurs)}]
