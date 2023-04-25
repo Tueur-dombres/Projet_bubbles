@@ -31,7 +31,8 @@ class Circle:
             return True
         else:
             return False
-
+        
+gamemode = "gameover"
 continuer = True    
 while continuer:
     horloge.tick(240)
@@ -43,55 +44,46 @@ while continuer:
                 continuer = False
         elif event.type == MOUSEBUTTONDOWN:
             x, y = event.pos
-            if event.button == 1:
-                suppr = []
-                for i in range(len(bubbles)):
-                    bubble = bubbles[i]
-                    if bubble.collidepoint(x,y):
-                        if bubble.colour == col["BLACK"]:
-                            vies -= 1
-                            suppr += [i]
-                        else:
-                            bubble.colour = choice(couleurs)
-                bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
+            if gamemode == "play":
+                if event.button == 1:
+                    suppr = []
+                    for i in range(len(bubbles)):
+                        bubble = bubbles[i]
+                        if bubble.collidepoint(x,y):
+                            if bubble.colour == col["BLACK"]:
+                                vies -= 1
+                                suppr += [i]
+                            else:
+                                bubble.colour = choice(couleurs)
+                    bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
                 
-                        
-
 
     screen.fill(col["WHITE"])
-    spawn_bubbles += 1
+    if gamemode == "play":
+        spawn_bubbles += 1
+        colours_count = {i:[] for i in couleurs[1:]}
 
-    colours_count = {i:[] for i in couleurs[1:]}
+        for i in range(len(bubbles)):
+            bubble = bubbles[i]
+            bubble.radius += .05
+            if bubble.colour != col["BLACK"]:
+                colours_count[bubble.colour] += [i]
 
-    for i in range(len(bubbles)):
-        bubble = bubbles[i]
-        bubble.radius += .05
-        if bubble.colour != col["BLACK"]:
-            colours_count[bubble.colour] += [i]
+        suppr = []
+        for i,e in colours_count.items():
+            if len(e) >= 3:
+                suppr += e
+                score += 1
+                print(score)
 
-    suppr = []
-    for i,e in colours_count.items():
-        if len(e) >= 3:
-            suppr += e
-            score += 1
-            print(score)
+        tempo_bubbles += [[bubbles[i],0] for i in range(len(bubbles)) if i in suppr]
+        bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
+        bubbles = [bubble for bubble in bubbles if bubble.radius <= 100]
 
-    tempo_bubbles += [[bubbles[i],0] for i in range(len(bubbles)) if i in suppr]
-    bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
-    bubbles = [bubble for bubble in bubbles if bubble.radius <= 100]
-
-    text_score = font.render(str(score), 1, col["BLACK"])
-    screen.blit(text_score, (20, 20))
-
-    text_vies = font.render(str(vies), 1, col["BLACK"])
-    screen.blit(text_vies, (1200, 20))
-
-    if spawn_bubbles >= 240:
-        bubbles += [Circle(randint(100, w-100), randint(100, h-100), 10, choice(couleurs))]
-        spawn_bubbles = 0
+        if spawn_bubbles >= 240:
+            bubbles += [Circle(randint(100, w-100), randint(100, h-100), 10, choice(couleurs))]
+            spawn_bubbles = 0
     
-    for bubble in bubbles :
-        pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
     
     suppr = []
     for i in range(len(tempo_bubbles)):
@@ -103,4 +95,21 @@ while continuer:
             suppr += [i]
     tempo_bubbles = [tempo_bubbles[i] for i in range(len(tempo_bubbles)) if i not in suppr]
 
+    for bubble in bubbles :
+        pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
+
+    text_score = font.render("score : "+str(score), 1, col["BLACK"])
+    screen.blit(text_score, (20, 20))
+
+    text_vies = font.render("vies restantes : "+str(vies), 1, col["BLACK"])
+    screen.blit(text_vies, (1000, 20))
+
+    if gamemode == "gameover":
+        largeur, hauteur = 600,300
+        pg.draw.rect(screen, col["BLACK"], Rect(w/2-largeur/2,h/2-hauteur/2,largeur,hauteur))
+        text_gameover = font.render("GAMEOVER", 1, col["WHITE"])
+        screen.blit(text_gameover, (w/2-105, h/2-hauteur/2+50))
+
+    if vies <= 0 and gamemode == "play":
+        gamemode = "gameover"
     pg.display.flip()
