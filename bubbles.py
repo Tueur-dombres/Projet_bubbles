@@ -61,12 +61,13 @@ while continuer:
     screen.fill(col["WHITE"])
     spawn_bubbles += 1
 
-    colours_count = {i:[] for i in couleurs}
+    colours_count = {i:[] for i in couleurs[1:]}
 
     for i in range(len(bubbles)):
         bubble = bubbles[i]
         bubble.radius += .05
-        colours_count[bubble.colour] += [i]
+        if bubble.colour != col["BLACK"]:
+            colours_count[bubble.colour] += [i]
 
     suppr = []
     for i,e in colours_count.items():
