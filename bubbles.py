@@ -7,18 +7,23 @@ from math import sqrt
 pg.init()
 
 size_screen = w, h = (1280,720)
+w_gameover, h_gameover = 600,300
 screen = pg.display.set_mode(size_screen)
 horloge = pg.time.Clock()
 col = {"BLACK":(0,0,0), "BLUE":(0,0,255), "RED":(255,0,0), "GREEN":(0,255,0), "MAGENTA":(255,0,255), "JAUNE":(255,255,0), "CYAN":(0,255,255), "WHITE":(255,255,255)}
 couleurs = [*col.values()][:-1]
 print(couleurs)
 font = pg.font.SysFont("arial", 36)
+font_petit = pg.font.SysFont("arial", 24)
 
 bubbles = []
 spawn_bubbles = 0
 score = 0
 vies = 3
 tempo_bubbles = []
+
+button_restart_gameover = Rect(w/2-170,h/2+30,128,36)
+button_menu_gameover = Rect(w/2+60,h/2+30,90,36)
 class Circle:
     def __init__(self, x, y, radius, colour):
         self.x = x
@@ -105,11 +110,16 @@ while continuer:
     screen.blit(text_vies, (1000, 20))
 
     if gamemode == "gameover":
-        largeur, hauteur = 600,300
-        pg.draw.rect(screen, col["BLACK"], Rect(w/2-largeur/2,h/2-hauteur/2,largeur,hauteur))
+        pg.draw.rect(screen, col["BLACK"], Rect(w/2-w_gameover/2,h/2-h_gameover/2,w_gameover,h_gameover))
         text_gameover = font.render("GAMEOVER", 1, col["WHITE"])
-        screen.blit(text_gameover, (w/2-105, h/2-hauteur/2+50))
-
+        screen.blit(text_gameover, (w/2-105, h/2-h_gameover/2+50))
+        text_restart = font_petit.render("RESTART", 1, col["WHITE"])
+        screen.blit(text_restart, (button_restart_gameover.x+10,button_restart_gameover.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_restart_gameover, width = 4)
+        text_menu = font_petit.render("MENU", 1, col["WHITE"])
+        screen.blit(text_menu, (button_menu_gameover.x+10,button_menu_gameover.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_menu_gameover, width = 4)
+        
     if vies <= 0 and gamemode == "play":
         gamemode = "gameover"
     pg.display.flip()
