@@ -18,7 +18,7 @@ bubbles = []
 spawn_bubbles = 0
 score = 0
 vies = 3
-
+tempo_bubbles = []
 class Circle:
     def __init__(self, x, y, radius, colour):
         self.x = x
@@ -75,9 +75,9 @@ while continuer:
             score += 1
             print(score)
 
+    tempo_bubbles += [[bubbles[i],0] for i in range(len(bubbles)) if i in suppr]
     bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
     bubbles = [bubble for bubble in bubbles if bubble.radius <= 100]
-
 
     text_score = font.render(str(score), 1, col["BLACK"])
     screen.blit(text_score, (20, 20))
@@ -91,4 +91,15 @@ while continuer:
     
     for bubble in bubbles :
         pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
+    
+    suppr = []
+    for i in range(len(tempo_bubbles)):
+        bubble,size = tempo_bubbles[i][0],tempo_bubbles[i][1]
+        pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
+        pg.draw.circle(screen, col["WHITE"], (bubble.x, bubble.y), size)
+        tempo_bubbles[i][1]+=.5
+        if tempo_bubbles[i][1] == round(bubble.radius,0):
+            suppr += [i]
+    tempo_bubbles = [tempo_bubbles[i] for i in range(len(tempo_bubbles)) if i not in suppr]
+
     pg.display.flip()
