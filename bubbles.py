@@ -9,13 +9,15 @@ pg.init()
 size_screen = w, h = (1280,720)
 screen = pg.display.set_mode(size_screen)
 horloge = pg.time.Clock()
-col = {"BLACK":(0,0,0), "BLUE":(0,0,255), "RED":(255,0,0), "GREEN":(0,255,0), "WHITE":(255,255,255)}
-couleurs = [col["BLACK"], col["BLUE"], col["RED"], col["GREEN"]]
+col = {"BLACK":(0,0,0), "BLUE":(0,0,255), "RED":(255,0,0), "GREEN":(0,255,0), "MAGENTA":(255,0,255), "JAUNE":(255,255,0), "CYAN":(0,255,255), "WHITE":(255,255,255)}
+couleurs = [*col.values()][:-1]
+print(couleurs)
 font = pg.font.SysFont("arial", 36)
 
 bubbles = []
 spawn_bubbles = 0
 score = 0
+vies = 3
 
 class Circle:
     def __init__(self, x, y, radius, colour):
@@ -42,9 +44,17 @@ while continuer:
         elif event.type == MOUSEBUTTONDOWN:
             x, y = event.pos
             if event.button == 1:
-                for bubble in bubbles:
+                suppr = []
+                for i in range(len(bubbles)):
+                    bubble = bubbles[i]
                     if bubble.collidepoint(x,y):
-                        bubble.colour = choice(couleurs)
+                        if bubble.colour == col["BLACK"]:
+                            vies -= 1
+                            suppr += [i]
+                        else:
+                            bubble.colour = choice(couleurs)
+                bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
+                
                         
 
 
@@ -71,6 +81,9 @@ while continuer:
 
     text_score = font.render(str(score), 1, col["BLACK"])
     screen.blit(text_score, (20, 20))
+
+    text_vies = font.render(str(vies), 1, col["BLACK"])
+    screen.blit(text_vies, (1200, 20))
 
     if spawn_bubbles >= 240:
         bubbles += [Circle(randint(100, w-100), randint(100, h-100), 10, choice(couleurs))]
