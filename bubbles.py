@@ -39,7 +39,7 @@ class Circle:
         else:
             return False
         
-gamemode = "gameover"
+gamemode = "play"
 continuer = True    
 while continuer:
     horloge.tick(240)
