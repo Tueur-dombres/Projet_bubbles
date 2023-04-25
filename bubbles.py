@@ -16,12 +16,14 @@ print(couleurs)
 font = pg.font.SysFont("arial", 36)
 font_petit = pg.font.SysFont("arial", 24)
 
-bubbles = []
-spawn_bubbles = 0
-score = 0
-vies = 3
-tempo_bubbles = []
-
+def start():
+    global bubbles, spawn_bubbles, score, vies, tempo_bubbles
+    bubbles = []
+    spawn_bubbles = 0
+    score = 0
+    vies = 3
+    tempo_bubbles = []
+start()
 button_restart_gameover = Rect(w/2-170,h/2+30,128,36)
 button_menu_gameover = Rect(w/2+60,h/2+30,90,36)
 class Circle:
@@ -61,6 +63,12 @@ while continuer:
                             else:
                                 bubble.colour = choice(couleurs)
                     bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
+            elif gamemode == "gameover":
+                if event.button == 1:
+                    if button_restart_gameover.collidepoint(x,y):
+                        gamemode = "play"
+                        start()
+
                 
 
     screen.fill(col["WHITE"])
