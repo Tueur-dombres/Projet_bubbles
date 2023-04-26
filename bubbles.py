@@ -16,6 +16,7 @@ print(couleurs)
 font_big = pg.font.SysFont("arial", 48)
 font = pg.font.SysFont("arial", 36)
 font_petit = pg.font.SysFont("arial", 24)
+record = 0
 
 def start():
     global bubbles, spawn_bubbles, score, vies, tempo_bubbles
@@ -26,8 +27,8 @@ def start():
     tempo_bubbles = []
 start()
 
-button_restart_gameover = Rect(w/2-170,h/2+30,128,36)
-button_menu_gameover = Rect(w/2+60,h/2+30,90,36)
+button_restart_gameover = Rect(w/2-170,h/2+50,128,36)
+button_menu_gameover = Rect(w/2+60,h/2+50,90,36)
 button_start_menu = Rect(w/2-300,h/2,135,48)
 class Circle:
     def __init__(self, x, y, radius, colour):
@@ -42,7 +43,7 @@ class Circle:
         else:
             return False
         
-gamemode = "menu"
+gamemode = "gameover"
 continuer = True    
 while continuer:
     horloge.tick(240)
@@ -135,20 +136,38 @@ while continuer:
         pg.draw.rect(screen, col["BLACK"], Rect(w/2-w_gameover/2,h/2-h_gameover/2,w_gameover,h_gameover))
         text_gameover = font.render("GAMEOVER", 1, col["WHITE"])
         screen.blit(text_gameover, (w/2-105, h/2-h_gameover/2+50))
+
+        #affichage du score
+        text_score_base = font_petit.render(f"Score = {score}", 1, col["WHITE"])
+        screen.blit(text_score_base, (w/2-60,h/2-30))
+        text_score_vies = font_petit.render(f"Vies restantes = {vies}", 1, col["WHITE"])
+        screen.blit(text_score_vies, (w/2-105,h/2-10))
+        text_score_total = font_petit.render(f"Score total = {score} + 5 x {vies} = {score+5*vies}", 1, col["WHITE"])
+        screen.blit(text_score_total, (w/2-150,h/2+10))
+        
+        #affichage des boutons
         text_restart = font_petit.render("RESTART", 1, col["WHITE"])
         screen.blit(text_restart, (button_restart_gameover.x+10,button_restart_gameover.y+5))
         pg.draw.rect(screen, col["WHITE"], button_restart_gameover, width = 4)
         text_menu = font_petit.render("MENU", 1, col["WHITE"])
         screen.blit(text_menu, (button_menu_gameover.x+10,button_menu_gameover.y+5))
         pg.draw.rect(screen, col["WHITE"], button_menu_gameover, width = 4)
+
     elif gamemode == "menu":
         screen.fill(col["BLACK"])
-        text_menu = font_big.render("MENU PRINCIPAL",1,col["WHITE"])
+        text_menu = font_big.render("MENU PRINCIPAL", 1, col["WHITE"])
         screen.blit(text_menu, (w/2-210, 100))
+
+        #affichage du record
+        text_record = font.render(f"Record : {record}", 1, col["WHITE"])
+        screen.blit(text_record, (1000, 100))
+        #affichage du boutton
         text_start = font.render("START", 1, col["WHITE"])
         screen.blit(text_start, (button_start_menu.x+10,button_start_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_start_menu, width = 4)
         
-    if vies <= 0 and gamemode == "play":
+    if vies <= 0 and gamemode == "play": #si l'on a perdu
         gamemode = "gameover"
+        record = max(record, score+5*vies)
+
     pg.display.flip()
