@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.locals import *
 from random import choice, randint
-from math import sqrt
+from math import sqrt, ceil
 
 pg.init()
 
@@ -134,14 +134,14 @@ while continuer:
         for bubble in bubbles :
             pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
         
-        text_temps_restant = font.render("temps restant : "+str(temps_restant//240), 1, col["BLACK"])
+        text_temps_restant = font.render("temps restant : "+str(int(ceil(temps_restant/240))), 1, col["BLACK"])
         screen.blit(text_temps_restant, (965, 20))
 
         text_score = font.render("score : "+str(score), 1, col["BLACK"])
         screen.blit(text_score, (20, 20))
 
         text_vies = font.render("vies restantes : "+str(vies), 1, col["BLACK"])
-        screen.blit(text_vies, (980, 50))
+        screen.blit(text_vies, (980, 60))
 
     if gamemode == "gameover":
         pg.draw.rect(screen, col["BLACK"], Rect(w/2-w_gameover/2, h/2-h_gameover/2, w_gameover, h_gameover))
@@ -218,9 +218,9 @@ while continuer:
         if compte_transition_gameover == w_gameover/2:
             gamemode = "gameover"
 
-    if vies <= 0 and gamemode == "play" and not tempo_bubbles: #si l'on a perdu
+    if (vies <= 0 or temps_restant <= 0) and gamemode == "play" and not tempo_bubbles: #si l'on a plus de vie, ou de temps
         gamemode = "transition_gameover"
         compte_transition_gameover = 0
-        record = max(record, score+5*vies)
+        record = max(record, score+3*vies)
 
     pg.display.flip()
