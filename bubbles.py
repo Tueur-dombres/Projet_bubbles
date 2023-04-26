@@ -33,6 +33,7 @@ button_start_menu = Rect(w/2-344/2, h/2-50, 344, 112)
 button_credits_menu = Rect(w/2-370, h/2+200, 230, 60)
 button_regles_menu = Rect(w/2+149, h/2+200, 212, 60)
 button_retour_menu = Rect(w/2-143, h-100, 286, 48)
+button_quitter_menu = Rect(40, 40, 180, 48)
 class Circle:
     def __init__(self, x, y, radius, colour):
         self.x = x
@@ -51,11 +52,8 @@ continuer = True
 while continuer:
     horloge.tick(240)
     for event in pg.event.get():
-        if event.type == QUIT:
+        if event.type == QUIT or event.type == KEYDOWN and event.key == K_ESCAPE:
             continuer = False
-        elif event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                continuer = False
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             x, y = event.pos
             if gamemode == "play":
@@ -84,6 +82,8 @@ while continuer:
                     gamemode = "credits"
                 elif button_regles_menu.collidepoint(x,y):
                     gamemode = "regles"
+                elif button_quitter_menu.collidepoint(x,y):
+                    continuer = False
             elif gamemode in ["credits","regles"]:
                 if button_retour_menu.collidepoint(x,y):
                     gamemode = "menu"
@@ -171,7 +171,7 @@ while continuer:
 
         #affichage du record
         text_record = font.render(f"Record : {record}", 1, col["WHITE"])
-        screen.blit(text_record, (1000, 80))
+        screen.blit(text_record, (1000, 40))
 
         #affichage des boutton
         text_start = font_very_big.render("START", 1, col["WHITE"])
@@ -183,6 +183,9 @@ while continuer:
         text_regles = font_big.render("REGLES", 1, col["WHITE"])
         screen.blit(text_regles, (button_regles_menu.x+10, button_regles_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_regles_menu, width = 4)
+        text_quitter = font.render("QUITTER", 1, col["WHITE"])
+        screen.blit(text_quitter, (button_quitter_menu.x+10, button_quitter_menu.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_quitter_menu, width = 4)
     
     elif gamemode in ["credits","regles"]:
         screen.fill(col["BLACK"])
