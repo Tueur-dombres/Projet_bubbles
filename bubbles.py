@@ -13,6 +13,7 @@ horloge = pg.time.Clock()
 col = {"BLACK":(0,0,0), "BLUE":(0,0,255), "RED":(255,0,0), "GREEN":(0,255,0), "MAGENTA":(255,0,255), "JAUNE":(255,255,0), "CYAN":(0,255,255), "WHITE":(255,255,255)}
 couleurs = [*col.values()][:-1]
 print(couleurs)
+font_big = pg.font.SysFont("arial", 48)
 font = pg.font.SysFont("arial", 36)
 font_petit = pg.font.SysFont("arial", 24)
 
@@ -24,8 +25,10 @@ def start():
     vies = 3
     tempo_bubbles = []
 start()
+
 button_restart_gameover = Rect(w/2-170,h/2+30,128,36)
 button_menu_gameover = Rect(w/2+60,h/2+30,90,36)
+button_start_menu = Rect(w/2-300,h/2,135,48)
 class Circle:
     def __init__(self, x, y, radius, colour):
         self.x = x
@@ -39,7 +42,7 @@ class Circle:
         else:
             return False
         
-gamemode = "play"
+gamemode = "menu"
 continuer = True    
 while continuer:
     horloge.tick(240)
@@ -67,6 +70,13 @@ while continuer:
             elif gamemode == "gameover":
                 if event.button == 1:
                     if button_restart_gameover.collidepoint(x,y):
+                        gamemode = "play"
+                        start()
+                    elif button_menu_gameover.collidepoint(x,y):
+                        gamemode = "menu"
+            elif gamemode == "menu":
+                if event.button == 1:
+                    if button_start_menu.collidepoint(x,y):
                         gamemode = "play"
                         start()
 
@@ -131,6 +141,13 @@ while continuer:
         text_menu = font_petit.render("MENU", 1, col["WHITE"])
         screen.blit(text_menu, (button_menu_gameover.x+10,button_menu_gameover.y+5))
         pg.draw.rect(screen, col["WHITE"], button_menu_gameover, width = 4)
+    elif gamemode == "menu":
+        screen.fill(col["BLACK"])
+        text_menu = font_big.render("MENU PRINCIPAL",1,col["WHITE"])
+        screen.blit(text_menu, (w/2-210, 100))
+        text_start = font.render("START", 1, col["WHITE"])
+        screen.blit(text_start, (button_start_menu.x+10,button_start_menu.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_start_menu, width = 4)
         
     if vies <= 0 and gamemode == "play":
         gamemode = "gameover"
