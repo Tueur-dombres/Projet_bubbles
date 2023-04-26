@@ -3,7 +3,6 @@ from pygame.locals import *
 from random import choice, randint
 from math import sqrt
 
-
 pg.init()
 
 size_screen = w, h = (1280,720)
@@ -187,6 +186,14 @@ while continuer:
         text_retour = font.render("RETOUR MENU", 1, col["WHITE"])
         screen.blit(text_retour, (button_retour_menu.x+10,button_retour_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_retour_menu, width = 4)
+
+        if gamemode == "credits":
+            text_titre_credits = font_big.render("Crédits", 1, col["WHITE"])
+            screen.blit(text_titre_credits, (w/2-75, 100))
+        elif gamemode == "regles":
+            text_titre_regles = font_big.render("Règles", 1, col["WHITE"])
+            screen.blit(text_titre_regles, (w/2-80, 100))
+
 
     
     elif gamemode == "transition_gameover":
