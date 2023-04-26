@@ -18,12 +18,13 @@ font_petit = pg.font.SysFont("arial", 24)
 record = 0
 
 def start():
-    global bubbles, spawn_bubbles, score, vies, tempo_bubbles
+    global bubbles, spawn_bubbles, score, vies, tempo_bubbles, temps_restant
     bubbles = []
     spawn_bubbles = 0
     score = 0
     vies = 3
     tempo_bubbles = []
+    temps_restant = 60*240
 start()
 
 button_restart_gameover = Rect(w/2-160, h/2+60, 128, 36)
@@ -93,6 +94,7 @@ while continuer:
 
     if gamemode == "play":
         spawn_bubbles += 1
+        temps_restant -= 1
         colours_count = {i:[] for i in couleurs[1:]}
 
         for i in range(len(bubbles)):
@@ -131,12 +133,15 @@ while continuer:
 
         for bubble in bubbles :
             pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
+        
+        text_temps_restant = font.render("temps restant : "+str(temps_restant//240), 1, col["BLACK"])
+        screen.blit(text_temps_restant, (965, 20))
 
         text_score = font.render("score : "+str(score), 1, col["BLACK"])
         screen.blit(text_score, (20, 20))
 
         text_vies = font.render("vies restantes : "+str(vies), 1, col["BLACK"])
-        screen.blit(text_vies, (980, 20))
+        screen.blit(text_vies, (980, 50))
 
     if gamemode == "gameover":
         pg.draw.rect(screen, col["BLACK"], Rect(w/2-w_gameover/2, h/2-h_gameover/2, w_gameover, h_gameover))
@@ -188,9 +193,20 @@ while continuer:
         pg.draw.rect(screen, col["WHITE"], button_retour_menu, width = 4)
 
         if gamemode == "credits":
+            #titre
             text_titre_credits = font_big.render("Crédits", 1, col["WHITE"])
             screen.blit(text_titre_credits, (w/2-75, 100))
+
+            #crédits
+            Texts_credits = ["Esteban Sabatier : développeur front-end et back-end",
+                            "Alienor Librecht : vidéaste et Testeuse/QA",
+                            "Charlotte Samama : écriture et management",
+                            "Noelline Knapp-Dubois : scénariste et game designer"]
+            for i in range(4):
+                screen.blit(font.render(Texts_credits[i], 1, col["WHITE"]), (w/2-420, 300 + 45*i))
+
         elif gamemode == "regles":
+            #titre
             text_titre_regles = font_big.render("Règles", 1, col["WHITE"])
             screen.blit(text_titre_regles, (w/2-80, 100))
 
