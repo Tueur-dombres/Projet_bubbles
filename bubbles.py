@@ -198,17 +198,27 @@ while continuer:
             screen.blit(text_titre_credits, (w/2-75, 100))
 
             #crédits
-            Texts_credits = ["Esteban Sabatier : développeur front-end et back-end",
+            texts_credits = ["Esteban Sabatier : développeur front-end et back-end",
                             "Alienor Librecht : vidéaste et Testeuse/QA",
                             "Charlotte Samama : écriture et management",
                             "Noelline Knapp-Dubois : scénariste et game designer"]
-            for i in range(4):
-                screen.blit(font.render(Texts_credits[i], 1, col["WHITE"]), (w/2-420, 300 + 45*i))
+            
+            for i in range(len(texts_credits)):
+                screen.blit(font.render(texts_credits[i], 1, col["WHITE"]), (w/2-420, 300 + 45*i))
 
         elif gamemode == "regles":
             #titre
             text_titre_regles = font_big.render("Règles", 1, col["WHITE"])
             screen.blit(text_titre_regles, (w/2-80, 100))
+
+            #règles
+            texts_regles = ["Line 1",
+                            "Line 2",
+                            "Line 3",
+                            "Line 4"]
+            
+            for i in range(len(texts_regles)):
+                screen.blit(font.render(texts_regles[i], 1, col["WHITE"]), (w/2-420, 300 + 45*i))
 
 
     
