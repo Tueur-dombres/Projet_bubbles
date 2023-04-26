@@ -62,6 +62,7 @@ while continuer:
                                 suppr += [i]
                             else:
                                 bubble.colour = choice(couleurs)
+                    tempo_bubbles += [[bubbles[i],0] for i in range(len(bubbles)) if i in suppr]
                     bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
             elif gamemode == "gameover":
                 if event.button == 1:
@@ -102,7 +103,10 @@ while continuer:
     for i in range(len(tempo_bubbles)):
         bubble,size = tempo_bubbles[i][0],tempo_bubbles[i][1]
         pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
-        pg.draw.circle(screen, col["WHITE"], (bubble.x, bubble.y), size)
+        if bubble.colour == col["BLACK"]:
+            pg.draw.polygon(screen, col["WHITE"], [(bubble.x,bubble.y-size),(bubble.x+size,bubble.y),(bubble.x,bubble.y+size),(bubble.x-size,bubble.y)])
+        else:
+            pg.draw.circle(screen, col["WHITE"], (bubble.x, bubble.y), size)
         tempo_bubbles[i][1]+=.5
         if tempo_bubbles[i][1] == round(bubble.radius,0):
             suppr += [i]
