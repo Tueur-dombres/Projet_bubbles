@@ -41,8 +41,8 @@ class Circle:
         self.radius = radius
         self.colour = colour
     
-    def collidepoint(self, x, y):
-        if sqrt((bubble.x-x)**2+(bubble.y-y)**2) < bubble.radius:
+    def collidepoint(self, x, y, size = 0):
+        if sqrt((self.x-x)**2+(self.y-y)**2) < (size if size else self.radius):
             return True
         else:
             return False
@@ -95,14 +95,16 @@ while continuer:
     if gamemode == "play":
         spawn_bubbles += 1
         temps_restant -= 1
+        
+        #aggrandissement et comptage des bubbles
         colours_count = {i:[] for i in couleurs[1:]}
-
         for i in range(len(bubbles)):
             bubble = bubbles[i]
             bubble.radius += .05
             if bubble.colour != col["BLACK"]:
                 colours_count[bubble.colour] += [i]
 
+        #suppression des triplets
         suppr = []
         for i,e in colours_count.items():
             if len(e) >= 3:
@@ -113,8 +115,12 @@ while continuer:
         bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
         bubbles = [bubble for bubble in bubbles if bubble.radius <= 100]
 
+        #génération
         if spawn_bubbles >= 240:
-            bubbles += [Circle(randint(100, w-100), randint(100, h-100), 10, choice(couleurs))]
+            x,y = randint(100, w-100), randint(100, h-100)
+            while sum(1 for bubble in bubbles if bubble.collidepoint(x,y,size=200))!=0:
+                x,y = randint(100, w-100), randint(100, h-100)
+            bubbles += [Circle(x,y, 10, choice(couleurs))]
             spawn_bubbles = 0
     
     if gamemode in ["play","gameover","transition_gameover"]:   
