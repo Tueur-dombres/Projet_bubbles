@@ -16,6 +16,7 @@ font_big = pg.font.SysFont("arial", 48)
 font = pg.font.SysFont("arial", 36)
 font_petit = pg.font.SysFont("arial", 24)
 record = 0
+speed_modif = 1
 
 def start():
     global bubbles, spawn_bubbles, score, vies, tempo_bubbles, temps_restant
@@ -100,7 +101,7 @@ while continuer:
         colours_count = {i:[] for i in couleurs[1:]}
         for i in range(len(bubbles)):
             bubble = bubbles[i]
-            bubble.radius += .05
+            bubble.radius += .05*speed_modif
             if bubble.colour != col["BLACK"]:
                 colours_count[bubble.colour] += [i]
 
@@ -116,7 +117,7 @@ while continuer:
         bubbles = [bubble for bubble in bubbles if bubble.radius <= 100]
 
         #génération
-        if spawn_bubbles >= 240:
+        if spawn_bubbles >= 240/speed_modif:
             x,y = randint(100, w-100), randint(100, h-100)
             while sum(1 for bubble in bubbles if bubble.collidepoint(x,y,size=200))!=0:
                 x,y = randint(100, w-100), randint(100, h-100)
@@ -132,7 +133,7 @@ while continuer:
                 pg.draw.polygon(screen, col["WHITE"], [(bubble.x,bubble.y-size),(bubble.x+size,bubble.y),(bubble.x,bubble.y+size),(bubble.x-size,bubble.y)])
             else:
                 pg.draw.circle(screen, col["WHITE"], (bubble.x, bubble.y), size)
-            tempo_bubbles[i][1]+=.5
+            tempo_bubbles[i][1]+=.5*speed_modif
             if tempo_bubbles[i][1] == round(bubble.radius,0):
                 suppr += [i]
         tempo_bubbles = [tempo_bubbles[i] for i in range(len(tempo_bubbles)) if i not in suppr]
