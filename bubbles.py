@@ -30,8 +30,8 @@ start()
 button_restart_gameover = Rect(w/2-170, h/2+60, 128, 36)
 button_menu_gameover = Rect(w/2+60, h/2+60, 90, 36)
 button_start_menu = Rect(w/2-344/2, h/2-50, 344, 112)
-button_credits_menu = Rect(w/2-314, h/2+200, 174, 60)
-button_regle_menu = Rect(w/2+140, h/2+200, 170, 60)
+button_credits_menu = Rect(w/2-370, h/2+200, 230, 60)
+button_regle_menu = Rect(w/2+149, h/2+200, 212, 60)
 class Circle:
     def __init__(self, x, y, radius, colour):
         self.x = x
@@ -112,7 +112,7 @@ while continuer:
             bubbles += [Circle(randint(100, w-100), randint(100, h-100), 10, choice(couleurs))]
             spawn_bubbles = 0
     
-    if gamemode in ["play","gameover"]:   
+    if gamemode in ["play","gameover","transition_gameover"]:   
         suppr = []
         for i in range(len(tempo_bubbles)):
             bubble,size = tempo_bubbles[i][0],tempo_bubbles[i][1]
@@ -169,15 +169,22 @@ while continuer:
         text_start = font_very_big.render("START", 1, col["WHITE"])
         screen.blit(text_start, (button_start_menu.x+10, button_start_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_start_menu, width = 4)
-        text_credits = font_big.render("Crédits", 1, col["WHITE"])
+        text_credits = font_big.render("CREDITS", 1, col["WHITE"])
         screen.blit(text_credits, (button_credits_menu.x+10, button_credits_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_credits_menu, width = 4)
-        text_regles = font_big.render("Règles", 1, col["WHITE"])
+        text_regles = font_big.render("REGLES", 1, col["WHITE"])
         screen.blit(text_regles, (button_regle_menu.x+10, button_regle_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_regle_menu, width = 4)
-        
-    if vies <= 0 and gamemode == "play": #si l'on a perdu
-        gamemode = "gameover"
+    
+    elif gamemode == "transition_gameover":
+        compte_transition_gameover += 1
+        pg.draw.rect(screen, col["BLACK"], Rect(w/2-compte_transition_gameover,h/2-compte_transition_gameover/2,compte_transition_gameover*2,compte_transition_gameover))
+        if compte_transition_gameover == w_gameover/2:
+            gamemode = "gameover"
+
+    if vies <= 0 and gamemode == "play" and not tempo_bubbles: #si l'on a perdu
+        gamemode = "transition_gameover"
+        compte_transition_gameover = 0
         record = max(record, score+5*vies)
 
     pg.display.flip()
