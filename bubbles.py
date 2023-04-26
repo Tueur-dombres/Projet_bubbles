@@ -27,11 +27,12 @@ def start():
     tempo_bubbles = []
 start()
 
-button_restart_gameover = Rect(w/2-170, h/2+60, 128, 36)
-button_menu_gameover = Rect(w/2+60, h/2+60, 90, 36)
+button_restart_gameover = Rect(w/2-160, h/2+60, 128, 36)
+button_menu_gameover = Rect(w/2+52, h/2+60, 90, 36)
 button_start_menu = Rect(w/2-344/2, h/2-50, 344, 112)
 button_credits_menu = Rect(w/2-370, h/2+200, 230, 60)
-button_regle_menu = Rect(w/2+149, h/2+200, 212, 60)
+button_regles_menu = Rect(w/2+149, h/2+200, 212, 60)
+button_retour_menu = Rect(w/2-143, h-100, 286, 48)
 class Circle:
     def __init__(self, x, y, radius, colour):
         self.x = x
@@ -45,7 +46,7 @@ class Circle:
         else:
             return False
         
-gamemode = "gameover"
+gamemode = "menu"
 continuer = True    
 while continuer:
     horloge.tick(240)
@@ -55,33 +56,37 @@ while continuer:
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 continuer = False
-        elif event.type == MOUSEBUTTONDOWN:
+        elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             x, y = event.pos
             if gamemode == "play":
-                if event.button == 1:
-                    suppr = []
-                    for i in range(len(bubbles)):
-                        bubble = bubbles[i]
-                        if bubble.collidepoint(x,y):
-                            if bubble.colour == col["BLACK"]:
-                                vies -= 1
-                                suppr += [i]
-                            else:
-                                bubble.colour = choice(couleurs)
-                    tempo_bubbles += [[bubbles[i],0] for i in range(len(bubbles)) if i in suppr]
-                    bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
+                suppr = []
+                for i in range(len(bubbles)):
+                    bubble = bubbles[i]
+                    if bubble.collidepoint(x,y):
+                        if bubble.colour == col["BLACK"]:
+                            vies -= 1
+                            suppr += [i]
+                        else:
+                            bubble.colour = choice(couleurs)
+                tempo_bubbles += [[bubbles[i],0] for i in range(len(bubbles)) if i in suppr]
+                bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
             elif gamemode == "gameover":
-                if event.button == 1:
-                    if button_restart_gameover.collidepoint(x,y):
-                        gamemode = "play"
-                        start()
-                    elif button_menu_gameover.collidepoint(x,y):
-                        gamemode = "menu"
+                if button_restart_gameover.collidepoint(x,y):
+                    gamemode = "play"
+                    start()
+                elif button_menu_gameover.collidepoint(x,y):
+                    gamemode = "menu"
             elif gamemode == "menu":
-                if event.button == 1:
-                    if button_start_menu.collidepoint(x,y):
-                        gamemode = "play"
-                        start()
+                if button_start_menu.collidepoint(x,y):
+                    gamemode = "play"
+                    start()
+                elif button_credits_menu.collidepoint(x,y):
+                    gamemode = "credits"
+                elif button_regles_menu.collidepoint(x,y):
+                    gamemode = "regles"
+            elif gamemode in ["credits","regles"]:
+                if button_retour_menu.collidepoint(x,y):
+                    gamemode = "menu"
 
 
 
@@ -102,7 +107,6 @@ while continuer:
             if len(e) >= 3:
                 suppr += e
                 score += 1
-                print(score)
 
         tempo_bubbles += [[bubbles[i],0] for i in range(len(bubbles)) if i in suppr]
         bubbles = [bubbles[i] for i in range(len(bubbles)) if i not in suppr]
@@ -167,14 +171,23 @@ while continuer:
 
         #affichage des boutton
         text_start = font_very_big.render("START", 1, col["WHITE"])
-        screen.blit(text_start, (button_start_menu.x+10, button_start_menu.y+5))
-        pg.draw.rect(screen, col["WHITE"], button_start_menu, width = 4)
+        screen.blit(text_start, (button_start_menu.x+10, button_start_menu.y+2))
+        pg.draw.rect(screen, col["WHITE"], button_start_menu, width = 7)
         text_credits = font_big.render("CREDITS", 1, col["WHITE"])
         screen.blit(text_credits, (button_credits_menu.x+10, button_credits_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_credits_menu, width = 4)
         text_regles = font_big.render("REGLES", 1, col["WHITE"])
-        screen.blit(text_regles, (button_regle_menu.x+10, button_regle_menu.y+5))
-        pg.draw.rect(screen, col["WHITE"], button_regle_menu, width = 4)
+        screen.blit(text_regles, (button_regles_menu.x+10, button_regles_menu.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_regles_menu, width = 4)
+    
+    elif gamemode in ["credits","regles"]:
+        screen.fill(col["BLACK"])
+
+        #affichage du bouton retour menu
+        text_retour = font.render("RETOUR MENU", 1, col["WHITE"])
+        screen.blit(text_retour, (button_retour_menu.x+10,button_retour_menu.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_retour_menu, width = 4)
+
     
     elif gamemode == "transition_gameover":
         compte_transition_gameover += 1
