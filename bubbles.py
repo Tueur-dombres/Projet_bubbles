@@ -221,6 +221,6 @@ while continuer:
     if (vies <= 0 or temps_restant <= 0) and gamemode == "play" and not tempo_bubbles: #si l'on a plus de vie, ou de temps
         gamemode = "transition_gameover"
         compte_transition_gameover = 0
-        record = max(record, score+3*vies)
+        record = max(record, score+5*vies)
 
     pg.display.flip()
