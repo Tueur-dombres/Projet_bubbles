@@ -16,16 +16,16 @@ font_big = pg.font.SysFont("arial", 48)
 font = pg.font.SysFont("arial", 36)
 font_petit = pg.font.SysFont("arial", 24)
 record = 0
-speed_modif = 1
 
 def start():
-    global bubbles, spawn_bubbles, score, vies, tempo_bubbles, temps_restant
+    global bubbles, spawn_bubbles, score, vies, tempo_bubbles, temps_restant, speed_modif
     bubbles = []
     spawn_bubbles = 0
     score = 0
     vies = 3
     tempo_bubbles = []
     temps_restant = 60*240
+    speed_modif = 1
 start()
 
 button_restart_gameover = Rect(w/2-160, h/2+60, 128, 36)
@@ -96,7 +96,8 @@ while continuer:
     if gamemode == "play":
         spawn_bubbles += 1
         temps_restant -= 1
-        
+        speed_modif *= 1.00005
+        print(speed_modif)
         #aggrandissement et comptage des bubbles
         colours_count = {i:[] for i in couleurs[1:]}
         for i in range(len(bubbles)):
@@ -134,7 +135,7 @@ while continuer:
             else:
                 pg.draw.circle(screen, col["WHITE"], (bubble.x, bubble.y), size)
             tempo_bubbles[i][1]+=.5*speed_modif
-            if tempo_bubbles[i][1] == round(bubble.radius,0):
+            if tempo_bubbles[i][1] >= bubble.radius:
                 suppr += [i]
         tempo_bubbles = [tempo_bubbles[i] for i in range(len(tempo_bubbles)) if i not in suppr]
 
@@ -230,8 +231,6 @@ while continuer:
             for i in range(len(texts_regles)):
                 screen.blit(font.render(texts_regles[i], 1, col["WHITE"]), (w/2-420, 300 + 45*i))
 
-
-    
     elif gamemode == "transition_gameover":
         compte_transition_gameover += 1
         pg.draw.rect(screen, col["BLACK"], Rect(w/2-compte_transition_gameover,h/2-compte_transition_gameover/2,compte_transition_gameover*2,compte_transition_gameover))
