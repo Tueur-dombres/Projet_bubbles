@@ -12,7 +12,7 @@ screen = pg.display.set_mode(size_screen)
 horloge = pg.time.Clock()
 col = {"BLACK":(0,0,0), "BLUE":(0,0,255), "RED":(255,0,0), "GREEN":(0,255,0), "MAGENTA":(255,0,255), "JAUNE":(255,255,0), "CYAN":(0,255,255), "WHITE":(255,255,255)}
 couleurs = [*col.values()][:-1]
-print(couleurs)
+font_very_big = pg.font.SysFont("arial", 100)
 font_big = pg.font.SysFont("arial", 48)
 font = pg.font.SysFont("arial", 36)
 font_petit = pg.font.SysFont("arial", 24)
@@ -27,9 +27,11 @@ def start():
     tempo_bubbles = []
 start()
 
-button_restart_gameover = Rect(w/2-170,h/2+50,128,36)
-button_menu_gameover = Rect(w/2+60,h/2+50,90,36)
-button_start_menu = Rect(w/2-300,h/2,135,48)
+button_restart_gameover = Rect(w/2-170, h/2+60, 128, 36)
+button_menu_gameover = Rect(w/2+60, h/2+60, 90, 36)
+button_start_menu = Rect(w/2-344/2, h/2-50, 344, 112)
+button_credits_menu = Rect(w/2-314, h/2+200, 174, 60)
+button_regle_menu = Rect(w/2+140, h/2+200, 170, 60)
 class Circle:
     def __init__(self, x, y, radius, colour):
         self.x = x
@@ -81,9 +83,10 @@ while continuer:
                         gamemode = "play"
                         start()
 
-                
+
 
     screen.fill(col["WHITE"])
+
     if gamemode == "play":
         spawn_bubbles += 1
         colours_count = {i:[] for i in couleurs[1:]}
@@ -109,62 +112,69 @@ while continuer:
             bubbles += [Circle(randint(100, w-100), randint(100, h-100), 10, choice(couleurs))]
             spawn_bubbles = 0
     
-    
-    suppr = []
-    for i in range(len(tempo_bubbles)):
-        bubble,size = tempo_bubbles[i][0],tempo_bubbles[i][1]
-        pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
-        if bubble.colour == col["BLACK"]:
-            pg.draw.polygon(screen, col["WHITE"], [(bubble.x,bubble.y-size),(bubble.x+size,bubble.y),(bubble.x,bubble.y+size),(bubble.x-size,bubble.y)])
-        else:
-            pg.draw.circle(screen, col["WHITE"], (bubble.x, bubble.y), size)
-        tempo_bubbles[i][1]+=.5
-        if tempo_bubbles[i][1] == round(bubble.radius,0):
-            suppr += [i]
-    tempo_bubbles = [tempo_bubbles[i] for i in range(len(tempo_bubbles)) if i not in suppr]
+    if gamemode in ["play","gameover"]:   
+        suppr = []
+        for i in range(len(tempo_bubbles)):
+            bubble,size = tempo_bubbles[i][0],tempo_bubbles[i][1]
+            pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
+            if bubble.colour == col["BLACK"]:
+                pg.draw.polygon(screen, col["WHITE"], [(bubble.x,bubble.y-size),(bubble.x+size,bubble.y),(bubble.x,bubble.y+size),(bubble.x-size,bubble.y)])
+            else:
+                pg.draw.circle(screen, col["WHITE"], (bubble.x, bubble.y), size)
+            tempo_bubbles[i][1]+=.5
+            if tempo_bubbles[i][1] == round(bubble.radius,0):
+                suppr += [i]
+        tempo_bubbles = [tempo_bubbles[i] for i in range(len(tempo_bubbles)) if i not in suppr]
 
-    for bubble in bubbles :
-        pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
+        for bubble in bubbles :
+            pg.draw.circle(screen, bubble.colour, (bubble.x, bubble.y), bubble.radius)
 
-    text_score = font.render("score : "+str(score), 1, col["BLACK"])
-    screen.blit(text_score, (20, 20))
+        text_score = font.render("score : "+str(score), 1, col["BLACK"])
+        screen.blit(text_score, (20, 20))
 
-    text_vies = font.render("vies restantes : "+str(vies), 1, col["BLACK"])
-    screen.blit(text_vies, (1000, 20))
+        text_vies = font.render("vies restantes : "+str(vies), 1, col["BLACK"])
+        screen.blit(text_vies, (980, 20))
 
     if gamemode == "gameover":
-        pg.draw.rect(screen, col["BLACK"], Rect(w/2-w_gameover/2,h/2-h_gameover/2,w_gameover,h_gameover))
+        pg.draw.rect(screen, col["BLACK"], Rect(w/2-w_gameover/2, h/2-h_gameover/2, w_gameover, h_gameover))
         text_gameover = font.render("GAMEOVER", 1, col["WHITE"])
         screen.blit(text_gameover, (w/2-105, h/2-h_gameover/2+50))
 
         #affichage du score
         text_score_base = font_petit.render(f"Score = {score}", 1, col["WHITE"])
-        screen.blit(text_score_base, (w/2-60,h/2-30))
+        screen.blit(text_score_base, (w/2-60,h/2-35))
         text_score_vies = font_petit.render(f"Vies restantes = {vies}", 1, col["WHITE"])
         screen.blit(text_score_vies, (w/2-105,h/2-10))
         text_score_total = font_petit.render(f"Score total = {score} + 5 x {vies} = {score+5*vies}", 1, col["WHITE"])
-        screen.blit(text_score_total, (w/2-150,h/2+10))
+        screen.blit(text_score_total, (w/2-150,h/2+15))
         
         #affichage des boutons
         text_restart = font_petit.render("RESTART", 1, col["WHITE"])
-        screen.blit(text_restart, (button_restart_gameover.x+10,button_restart_gameover.y+5))
+        screen.blit(text_restart, (button_restart_gameover.x+10, button_restart_gameover.y+5))
         pg.draw.rect(screen, col["WHITE"], button_restart_gameover, width = 4)
         text_menu = font_petit.render("MENU", 1, col["WHITE"])
-        screen.blit(text_menu, (button_menu_gameover.x+10,button_menu_gameover.y+5))
+        screen.blit(text_menu, (button_menu_gameover.x+10, button_menu_gameover.y+5))
         pg.draw.rect(screen, col["WHITE"], button_menu_gameover, width = 4)
 
     elif gamemode == "menu":
         screen.fill(col["BLACK"])
         text_menu = font_big.render("MENU PRINCIPAL", 1, col["WHITE"])
-        screen.blit(text_menu, (w/2-210, 100))
+        screen.blit(text_menu, (w/2-205, 150))
 
         #affichage du record
         text_record = font.render(f"Record : {record}", 1, col["WHITE"])
-        screen.blit(text_record, (1000, 100))
-        #affichage du boutton
-        text_start = font.render("START", 1, col["WHITE"])
-        screen.blit(text_start, (button_start_menu.x+10,button_start_menu.y+5))
+        screen.blit(text_record, (1000, 80))
+
+        #affichage des boutton
+        text_start = font_very_big.render("START", 1, col["WHITE"])
+        screen.blit(text_start, (button_start_menu.x+10, button_start_menu.y+5))
         pg.draw.rect(screen, col["WHITE"], button_start_menu, width = 4)
+        text_credits = font_big.render("Crédits", 1, col["WHITE"])
+        screen.blit(text_credits, (button_credits_menu.x+10, button_credits_menu.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_credits_menu, width = 4)
+        text_regles = font_big.render("Règles", 1, col["WHITE"])
+        screen.blit(text_regles, (button_regle_menu.x+10, button_regle_menu.y+5))
+        pg.draw.rect(screen, col["WHITE"], button_regle_menu, width = 4)
         
     if vies <= 0 and gamemode == "play": #si l'on a perdu
         gamemode = "gameover"
