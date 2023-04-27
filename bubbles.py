@@ -256,13 +256,16 @@ while continuer:
             screen.blit(text_titre_regles, (w/2-80, 100))
 
             #affichage du texte des règles
-            texts_regles = ["Line 1",
-                            "Line 2",
-                            "Line 3",
-                            "Line 4"]
+            texts_regles = ["Votre objectif : obtenir le plus de point avant la fin de la partie.",
+                            "Vous possédez 3 vies et 60 secondes, à vous d'en faire bon usage !",
+                            "Lorsque vous cliquez sur une bulle, elle change de couleur.",
+                            "Quand vous avez 3 bulles de la même couleur, vous gagnez un point.",
+                            "Attention,  les bulles noires, sont des bombes qui font perdre une vie !",
+                            "A la fin de la partie, 5 points bonus sont accordés par vie restante.",
+                            "La partie s'arrête quand le délai est écoulé, ou que le joueur n'a plus de vies."]
             
             for i in range(len(texts_regles)):
-                screen.blit(font.render(texts_regles[i], 1, col["WHITE"]), (w/2-420, 300 + 45*i))
+                screen.blit(font.render(texts_regles[i], 1, col["WHITE"]), (w/2-610, 240 + 45*i))
 
     if (vies <= 0 or temps_restant <= 0) and gamemode == "play" and not tempo_bubbles: #si l'on a plus de vie, ou de temps
         gamemode = "transition_gameover" #on lance la transition
