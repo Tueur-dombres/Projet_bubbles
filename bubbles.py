@@ -97,7 +97,6 @@ while continuer:
         spawn_bubbles += 1
         temps_restant -= 1
         speed_modif *= 1.00005
-        print(speed_modif)
         #aggrandissement et comptage des bubbles
         colours_count = {i:[] for i in couleurs[1:]}
         for i in range(len(bubbles)):
@@ -119,11 +118,13 @@ while continuer:
 
         #génération
         if spawn_bubbles >= 240/speed_modif:
-            x,y = randint(100, w-100), randint(100, h-100)
-            while sum(1 for bubble in bubbles if bubble.collidepoint(x,y,size=200))!=0:
-                x,y = randint(100, w-100), randint(100, h-100)
-            bubbles += [Circle(x,y, 10, choice(couleurs))]
-            spawn_bubbles = 0
+            #choisir une position pas trop proche d'une autre bubble pour qu'elle ne puisse pas se toucher
+            x,y = randint(100, w-100), randint(100, h-100) #une première positon aléatoire
+            while sum(1 for bubble in bubbles if bubble.collidepoint(x,y,size=200))!=0: #s'il la position est trop proche d'une bubble
+                x,y = randint(100, w-100), randint(100, h-100) #choix d'une nouvelle position aléatoire
+            c = choice([couleur for couleur in couleurs[1:] if len(colours_count[couleur]) < 2]) #choix d'une couleur aléatoire parmis celle qui sont présentes une ou deux fois, pour ne pas faire gagner de point automatiquement
+            bubbles += [Circle(x,y, 10, c)] #ajout de la nouvelle bubble à la liste
+            spawn_bubbles = 0 #reset du timer
     
     if gamemode in ["play","gameover","transition_gameover"]:   
         suppr = []
